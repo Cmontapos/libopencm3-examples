@@ -146,30 +146,28 @@ static void tim_setup(void)
 	 * are doubled.  See the Reference Manual for full details!
 	 */
 	// timer_set_prescaler(TIM1, 0xFFFF); // 2563Hz clk
+  // timer_set_prescaler(TIM1, 4095); // 62.5ms
   timer_set_prescaler(TIM1, 0x00FF); // 
+  
   
     //timer_set_repetition_counter(TIM1, 15);
     timer_disable_preload(TIM1);
     timer_continuous_mode(TIM1);
 
     /* Count period */
-	// timer_set_period(TIM1, 2563);  //
-  // timer_set_period(TIM1, 65548); // 1s 
-  // timer_set_period(TIM1, 6555);  // 100ms
-  // timer_set_period(TIM1, 4096);  // 62.5ms
+	// timer_set_period(TIM1, 2563);  // 
+  // timer_set_period(TIM1, 256);  // 100ms
 	timer_set_period(TIM1, 13124); // 20ms en prescaler: 0x00FF
 
 
 	/* Set the initual output compare value for OC1. */
-	// timer_set_oc_value(TIM1, TIM_OC1, 2563); // 100%
-	timer_set_oc_value(TIM1, TIM_OC1, 2563/2); // 50%
+	// timer_set_oc_value(TIM1, TIM_OC1, 320); // 100%
+	// timer_set_oc_value(TIM1, TIM_OC1, 2563/2); // 50%
 
-
+	// timer_set_oc_value(TIM1, TIM_OC1, 13124*0);  //   5% 20ms
 	// timer_set_oc_value(TIM1, TIM_OC1, 13124*0.05);  //   5% 20ms
 	// timer_set_oc_value(TIM1, TIM_OC1, 13124*0.075); // 7.5% 20ms
-	// timer_set_oc_value(TIM1, TIM_OC1, 13124*0.1);   //  10% 20ms
-	// timer_set_oc_value(TIM1, TIM_OC1, 13124*0.5); // 50% 20ms
-
+	timer_set_oc_value(TIM1, TIM_OC1, 13124*0.1);   //  10% 20ms
 
     /* Disable outputs. */
     //timer_enable_oc_output(TIM1, TIM_OC1);
@@ -226,32 +224,32 @@ int main(void)
 
 	/* Blink the LEDs (PG13 and PG14) on the board. */
 	while (1) {
-		/* Toggle LEDs. */
-		gpio_toggle(LGREENF_PORT, LGREENF);
-		for (i = 0; i < 6000000; i++) { /* Wait a bit. */
-			__asm__("nop");
-		}
+		// /* Toggle LEDs. */
+		// gpio_toggle(LGREENF_PORT, LGREENF);
+		// for (i = 0; i < 6000000; i++) { /* Wait a bit. */
+		// 	__asm__("nop");
+		// }
     
 
-    // // 0% por 2 segundos
-    // timer_set_oc_value(TIM1, TIM_OC1, 2563*0);
-    // for (i = 0; i < 2 * 6000000; i++) __asm__("nop");
+    // 0% por 2 segundos
+    timer_set_oc_value(TIM1, TIM_OC1, 13124*0.05);
+    for (i = 0; i < 2 * 48000000; i++) __asm__("nop");
 
-    // // 10% por 1 segundo
-    // timer_set_oc_value(TIM1, TIM_OC1, 2563*0.1);
-    // for (i = 0; i < 1 * 6000000; i++) __asm__("nop");
+    // 10% por 1 segundo
+    timer_set_oc_value(TIM1, TIM_OC1, 13124*0.055);
+    for (i = 0; i < 1 * 48000000; i++) __asm__("nop");
 
-    // // 100% por 3 segundos
-    // timer_set_oc_value(TIM1, TIM_OC1, 2563);
-    // for (i = 0; i < 3 * 6000000; i++) __asm__("nop");
+    // 100% por 3 segundos
+    timer_set_oc_value(TIM1, TIM_OC1, 13124*0.1);
+    for (i = 0; i < 3 * 48000000; i++) __asm__("nop");
 
-    // // 50% por 1 segundo
-    // timer_set_oc_value(TIM1, TIM_OC1, 2563/2);
-    // for (i = 0; i < 1 * 6000000; i++) __asm__("nop");
+    // 50% por 1 segundo
+    timer_set_oc_value(TIM1, TIM_OC1, 13124*0.075);
+    for (i = 0; i < 1 * 48000000; i++) __asm__("nop");
 
-    // // 10% por 5 segundos
-    // timer_set_oc_value(TIM1, TIM_OC1, 2563*0.1);
-    // for (i = 0; i < 5 * 6000000; i++) __asm__("nop");
+    // 10% por 5 segundos
+    timer_set_oc_value(TIM1, TIM_OC1, 13124*0.055);
+    for (i = 0; i < 5 * 48000000; i++) __asm__("nop");
 	}
 
 	return 0;
